@@ -1,62 +1,23 @@
-import widget = require("portal/widget");
 
-class Sticker extends widget.Widget {
-    constructor(element, config) {
-        super(element, config);
-        this.initEls();
-        this.behavior = this.getState('behavior').value || 'default';
-        this.resize();
-        this.stick();
-        this.unStick();
-        this.register('sticker');
-    }
-
-    behavior:string = 'default';
-    els;
-    dims;
-    private _isStuck:boolean = false;
-
-    static stickyCSS = {
-        'margin': '0',
-        'width': '100%',
-        'position': 'absolute'
+class Sticker {
+    private els:{
+        $el:JQuery;
+        $placeholder:JQuery;
+        $context:JQuery;
     };
+    private dims;
 
-    private initEls() {
-        this.els = {
-            $sticker: this.getNode('sticker'),
-            $context: this.rootNode.parent(),
-            $placeholder: this.rootNode,
-            $window: $(window),
-            $document: $(document)
-        };
+    constructor(element, options) {
+        this.els.$el = $(element);
+        this.els.$context = this.els.$el.parent();
+
+        this.wrapWithPlaceholder();
     }
 
-    private setPosition(position:string):Sticker {
-        this.removeState('position');
-        this.setState('position', position);
-        return this;
+    private wrapWithPlaceholder() {
+
     }
 
-    private stick():Sticker {
-        if (!this.isStuck()) {
-            this.setPosition('fixed');
-            this._isStuck = true;
-        }
-        return this;
-    }
-
-    private unStick():Sticker {
-        if (this.isStuck()) {
-            this.setPosition('static');
-            this._isStuck = false;
-        }
-        return this;
-    }
-
-    isStuck():boolean {
-        return this._isStuck;
-    }
 
     private resize() {
         var els = this.els,
@@ -108,9 +69,6 @@ class Sticker extends widget.Widget {
         }
     }
 
-    private resetOffset() {
-        this.dims.sticker.offset = this.els.$sticker.offset();
-    }
 
     reposition(top) {
         var els = this.els,
@@ -136,19 +94,6 @@ class Sticker extends widget.Widget {
         this.resetOffset();
     }
 
-    private stickWithScroll(top) {
-        /*        var scrollDirection = scrollTop > this.oldScrollTop ? 'down' : 'up';
-         if (scrollDirection === 'down') {
-         this.stickToBottom(scrollTop, marginTop);
-         } else {
-         this.stickToTop(scrollTop, marginTop);
-         }
-         this.oldScrollTop = scrollTop;*/
-    }
-
-    isChildOf(sticker:Sticker):boolean {
-        return this.els.$sticker.closest(sticker.els.$sticker).length > 0;
-    }
 
     canStickTo(sticker:Sticker):boolean {
         var ownDims = this.dims.sticker,
@@ -157,14 +102,6 @@ class Sticker extends widget.Widget {
             && ownDims.offset.left + ownDims.width > overDims.offset.left;
     }
 
-    getDims() {
-        return this.dims;
-    }
-
-    setZIndex(index:number):Sticker {
-        this.els.$sticker.css({'z-index': index});
-        return this;
-    }
 }
 export = Sticker;
 
