@@ -1,73 +1,54 @@
 
 class Sticker {
     private els:{
-        $el:JQuery;
+        $sticker:JQuery;
         $placeholder:JQuery;
         $context:JQuery;
     };
     private dims;
 
     constructor(element, options) {
-        this.els.$el = $(element);
+        this.els.$sticker = $(element);
         this.els.$context = this.els.$el.parent();
 
         this.wrapWithPlaceholder();
     }
 
     private wrapWithPlaceholder() {
-
-    }
-
-
-    private resize() {
-        var els = this.els,
-            $sticker = els.$sticker,
-            $context = els.$context,
-            $placeholder = els.$placeholder,
-            placeholderCSS = {},
-            stickerCSS = $.extend({}, Sticker.stickyCSS);
-
-        placeholderCSS['position'] = placeholderCSS['position'] == 'absolute' ? 'absolute' : 'relative';
-        placeholderCSS['height'] = $sticker.outerHeight(true) + 'px';
-
-        $placeholder.css(placeholderCSS);
-        $sticker.css(stickerCSS);
-
-        this.dims = {
-            sticker: {
-                offset: $sticker.offset(),
-                width: $sticker.outerWidth(),
-                height: $sticker.outerHeight()
-            },
-            placeholder: {
-                offset: $placeholder.offset(),
-                width: $placeholder.outerWidth(),
-                height: $placeholder.outerHeight()
-            },
-            context: {
-                offset: $context.offset(),
-                width: $context.outerWidth(),
-                height: $context.height()
-            },
-            window: {
-                height: els.$window.height()
-            },
-            document: {
-                height: els.$document.height()
-            }
+        var boxCSS = {
+            margin: null,
+            borderWidth: null,
+            padding: null,
+            height: null,
+            width: null,
+            boxSizing: null,
+            float: null,
+            clear: null,
+            display: null
         };
-        var dims = this.dims;
-        switch (this.behavior) {
-            case 'default':
-                dims.minY = 0;
-                dims.maxY = dims.context.height - dims.sticker.height - (dims.placeholder.offset.top - dims.context.offset.top);
-                break;
-            case 'bottom':
-                dims.minY = - (dims.placeholder.offset.top - dims.context.offset.top);
-                dims.maxY = 0;
-                break;
+        var positionCSS = {
+            position: 'absolute',
+            top: 0,
+            right: 'auto',
+            bottom: 'auto',
+            left: 0
+        };
+        var placeholderPositionCSS = $.extend({}, positionCSS);
+        for (var CSSprop in boxCSS) {
+            boxCSS[CSSprop] = this.els.$sticker.css(CSSprop);
         }
+        for (var CSSprop in placeholderPositionCSS) {
+            placeholderPositionCSS[CSSprop] = this.els.$sticker.css(CSSprop);
+        }
+        placeholderPositionCSS['position'] = (placeholderPositionCSS['position'] == 'relative' || placeholderPositionCSS['position'] == 'static') ? 'relative' : placeholderPositionCSS['position']
+        var placeholderCSS = $.extend({}, placeholderPositionCSS, boxCSS);
+
+        this.els.$placeholder = $('<div></div>');
+        this.els.$placeholder.css(placeholderCSS);
+        this.els.$sticker.wrap(this.els.$placeholder);
+        this.els.$sticker.css($.extend({}, positionCSS, boxCSS));
     }
+
 
 
     reposition(top) {
