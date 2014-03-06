@@ -9,7 +9,7 @@ class Sticker {
 
     constructor(element, options) {
         this.els.$sticker = $(element);
-        this.els.$context = this.els.$el.parent();
+        this.els.$context = this.els.$sticker.parent();
 
         this.wrapWithPlaceholder();
     }
@@ -47,6 +47,25 @@ class Sticker {
         this.els.$placeholder.css(placeholderCSS);
         this.els.$sticker.wrap(this.els.$placeholder);
         this.els.$sticker.css($.extend({}, positionCSS, boxCSS));
+    }
+
+    private unwrapPlaceholder() {
+        this.els.$sticker.unwrap();
+        this.resetCSSToDefault();
+    }
+
+    private resetCSSToDefault() {
+
+    }
+
+    private updateDims() {
+
+    }
+
+    private resize() {
+        this.unwrapPlaceholder();
+        this.wrapWithPlaceholder();
+        this.updateDims();
     }
 
 
