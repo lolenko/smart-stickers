@@ -70,6 +70,7 @@ class Sticker {
 
 
 
+
 /*
     reposition(top) {
         var els = this.els,

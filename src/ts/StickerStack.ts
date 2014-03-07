@@ -35,6 +35,7 @@ class StickersStack {
         return this;
     }
 
+
     private sort(inverse:boolean = false) {
         this._stack.sort((function(prevSticker, nextSticker) {
             var delta =  prevSticker.getDims().placeholder.offset.top - nextSticker.getDims().placeholder.offset.top;

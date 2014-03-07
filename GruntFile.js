@@ -30,10 +30,11 @@ module.exports = function (grunt) {
         typescript: {
             base: {
                 src: ['src/ts/**/*.ts'],
-                dest: 'js/*.js',
+                dest: 'js',
                 options: {
                     module: 'amd',
-                    target: 'es5'
+                    target: 'es5',
+                    base_path: 'src/ts'
                 }
             }
         },
@@ -54,6 +55,6 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('default', ['connect', 'open', 'watch']);
+    grunt.registerTask('default', ['typescript', 'less', 'connect', 'open', 'watch']);
 
 }
