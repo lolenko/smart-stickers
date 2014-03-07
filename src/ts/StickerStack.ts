@@ -1,3 +1,4 @@
+/*
 import Sticker = require("./sticker");
 
 
@@ -75,3 +76,4 @@ class StickersStack {
 }
 
 export = StickersStack;
+*/

@@ -31,7 +31,8 @@
  *
  *  Бляяя не один из костылей оказался работосвособным.. поэтому сдержанно переименовываем этот виджет в window-scroll который по
  *  сути будет являтся стики менеджером без какой либо кастомизации скроллбара
- * */
+ * *//*
+
 
 import widget = require("portal/widget");
 import Sticker = require("./sticker");
@@ -117,3 +118,4 @@ class WindowScroll extends widget.Widget {
 }
 export = WindowScroll;
 
+*/

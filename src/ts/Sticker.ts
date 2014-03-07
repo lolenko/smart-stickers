@@ -70,6 +70,7 @@ class Sticker {
 
 
 
+/*
     reposition(top) {
         var els = this.els,
             dims = this.dims,
@@ -101,6 +102,7 @@ class Sticker {
         return overDims.offset.left + overDims.width > ownDims.offset.left
             && ownDims.offset.left + ownDims.width > overDims.offset.left;
     }
+*/
 
 }
 export = Sticker;

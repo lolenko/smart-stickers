@@ -30,7 +30,7 @@ module.exports = function (grunt) {
         typescript: {
             base: {
                 src: ['src/ts/**/*.ts'],
-                dest: 'js/stickers.js',
+                dest: 'js/*.js',
                 options: {
                     module: 'amd',
                     target: 'es5'
@@ -38,8 +38,14 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            files: '**/*.ts',
-            tasks: ['typescript', 'less']
+            typescript: {
+                files: 'src/ts/*.ts',
+                tasks: ['typescript']
+            },
+            less: {
+                files: 'src/less/*.less',
+                tasks: ['less']
+            }
         },
         open: {
             dev: {
@@ -48,6 +54,6 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('default', ['less']);
+    grunt.registerTask('default', ['connect', 'open', 'watch']);
 
 }
