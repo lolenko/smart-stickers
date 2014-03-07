@@ -18,14 +18,12 @@ module.exports = function (grunt) {
         less: {
             development: {
                 options: {
-                    concat: true
+                    concat: false
                 },
                 files: {
-                    expand: true,
-                    cwd:    "src/less",
-                    dest:    "styles",
-                    src:    ["*.less", '*.css'],
-                    ext:    ".css"
+                    // target.css file: source.less file
+                    "styles/reset.css": "./src/less/reset.less",
+                    "styles/main.css": "./src/less/main.less"
                 }
             }
         },
