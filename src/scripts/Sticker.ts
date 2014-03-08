@@ -1,4 +1,5 @@
 
+
 class Sticker {
     private els:{
         $sticker?:JQuery;
