@@ -1,4 +1,4 @@
-
+var $window = $(window);
 
 class Sticker {
     private els:{
@@ -6,17 +6,24 @@ class Sticker {
         $placeholder?:JQuery;
         $context?:JQuery;
     };
+    private defaultInlineStyles:string;
+    private isWrappedWithPlaceholder:boolean = false;
     private dims;
 
     constructor(element, options?) {
         this.els = {};
         this.els.$sticker = $(element);
         this.els.$context = this.els.$sticker.parent();
-
+        this.defaultInlineStyles = this.els.$sticker.attr('style');
         this.wrapWithPlaceholder();
+        $window.on('resize', this.resetPlaceholder.bind(this));
+
     }
 
     private wrapWithPlaceholder() {
+        if (this.isWrappedWithPlaceholder) {
+            return this;
+        }
         var boxCSS = {
             margin: null,
             borderWidth: null,
@@ -49,22 +56,29 @@ class Sticker {
         this.els.$placeholder.css(placeholderCSS);
         this.els.$sticker.wrap(this.els.$placeholder);
         this.els.$sticker.css($.extend({}, positionCSS, boxCSS));
+        this.isWrappedWithPlaceholder = true;
+        return this;
     }
 
     private unwrapPlaceholder() {
+        if (!this.isWrappedWithPlaceholder) {
+            return this;
+        }
         this.els.$sticker.unwrap();
-        this.resetCSSToDefault();
+        this.resetInlineStylesToDefault();
+        this.isWrappedWithPlaceholder = false;
+        return this;
     }
 
-    private resetCSSToDefault() {
-
+    private resetInlineStylesToDefault() {
+        this.els.$sticker.attr('style', this.defaultInlineStyles);
     }
 
     private updateDims() {
 
     }
 
-    private resize() {
+    private resetPlaceholder() {
         this.unwrapPlaceholder();
         this.wrapWithPlaceholder();
         this.updateDims();
