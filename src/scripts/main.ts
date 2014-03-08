@@ -1,10 +1,11 @@
 /*require.config({
 
 });*/
-///<reference path="../../js/libs/jquery.d.ts" />
+///<reference path="vendor/jquery.d.ts" />
 
-import jquery = require('../../js/libs/bower_components/jquery/dist/jquery.js');
+import jquery = require('vendor/jquery');
 import Sticker = require('Sticker');
 
+
 $.noop();
-new Sticker();
+//new Sticker();

@@ -3,6 +3,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-typescript');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-open');
 
     grunt.initConfig({
@@ -21,30 +22,41 @@ module.exports = function (grunt) {
                     concat: false
                 },
                 files: {
-                    // target.css file: source.less file
-                    "styles/reset.css": "./src/less/reset.less",
-                    "styles/main.css": "./src/less/main.less"
+                    "styles/reset.css": "./src/styles/reset.less",
+                    "styles/main.css": "./src/styles/main.less"
                 }
             }
         },
         typescript: {
             base: {
-                src: ['src/ts/**/*.ts'],
+                src: ['src/scripts/**/*.ts'],
                 dest: 'js',
                 options: {
                     module: 'amd',
                     target: 'es5',
-                    base_path: 'src/ts'
+                    base_path: 'src/scripts'
                 }
             }
         },
+        copy: {
+            main: {
+                files: [
+                    {
+                        expand: true,
+                        src: '**/*.js',
+                        cwd: 'src/scripts',
+                        dest: 'js/'
+                    }
+                ]
+            }
+        },
         watch: {
-            typescript: {
-                files: 'src/ts/*.ts',
+            scripts: {
+                files: 'src/scripts/*.ts',
                 tasks: ['typescript']
             },
-            less: {
-                files: 'src/less/*.less',
+            styles: {
+                files: 'src/styles/*.less',
                 tasks: ['less']
             }
         },
@@ -55,6 +67,6 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('default', ['typescript', 'less', 'connect', 'open', 'watch']);
+    grunt.registerTask('default', ['copy', 'typescript', 'less', 'connect', 'open', 'watch']);
 
 }
