@@ -8,7 +8,10 @@ class Sticker {
     };
     private defaultInlineStyles:string;
     private isWrappedWithPlaceholder:boolean = false;
-    private dims;
+    private dims:{
+        maxTop?:number;
+        minTop?:number;
+    };
 
     constructor(element, options?) {
         this.els = {};
@@ -16,6 +19,7 @@ class Sticker {
         this.els.$context = this.els.$sticker.parent();
         this.defaultInlineStyles = this.els.$sticker.attr('style');
         this.wrapWithPlaceholder();
+        this.updateDims();
         $window.on('resize', this.resetPlaceholder.bind(this));
 
     }
@@ -75,13 +79,21 @@ class Sticker {
     }
 
     private updateDims() {
-
+        this.dims = {
+            minTop: 0,
+            maxTop: this.els.$context.height() - this.els.$sticker.outerHeight(),
+            height: this.els.$sticker.outerHeight()
+        };
     }
 
     private resetPlaceholder() {
         this.unwrapPlaceholder();
         this.wrapWithPlaceholder();
         this.updateDims();
+    }
+
+    private reposition(top) {
+
     }
 
 
