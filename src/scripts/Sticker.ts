@@ -1,13 +1,14 @@
 
 class Sticker {
     private els:{
-        $sticker:JQuery;
-        $placeholder:JQuery;
-        $context:JQuery;
+        $sticker?:JQuery;
+        $placeholder?:JQuery;
+        $context?:JQuery;
     };
     private dims;
 
-    constructor(element, options) {
+    constructor(element, options?) {
+        this.els = {};
         this.els.$sticker = $(element);
         this.els.$context = this.els.$sticker.parent();
 

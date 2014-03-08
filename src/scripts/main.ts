@@ -6,6 +6,8 @@
 import jquery = require('vendor/jquery');
 import Sticker = require('Sticker');
 
+if (jquery) $.noop();
 
-$.noop();
-//new Sticker();
+$('.sticker').each(function(i, el) {
+    new Sticker(el);
+});
