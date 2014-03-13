@@ -1,3 +1,5 @@
+import jquery = require('vendor/jquery');
+if (jquery);
 var $window = $(window);
 
 class Sticker {
@@ -104,7 +106,19 @@ class Sticker {
         return this;
     }
 
-    private reposition(top:number):Sticker {
+    reposition(top:number):Sticker {
+        top = top - this.els.$placeholder.offset().top;
+
+        this.unStick();
+        if (top <= this.dims.minTop) {
+            top = this.dims.minTop;
+        } else if (top >= this.dims.maxTop) {
+            top = this.dims.maxTop;
+        } else {
+            this.stick();
+        }
+
+        this.els.$sticker.css({'top': top});
         return this;
     }
 
@@ -112,8 +126,21 @@ class Sticker {
         return this._isStuck;
     }
 
+    private stick():Sticker {
+        this._isStuck = true;
+        return this;
+    }
+
+    private unStick():Sticker {
+        this._isStuck = false;
+        return this;
+    }
+
     private canStickTo(sticker:Sticker):boolean {
-        return false;
+        var ownOffset = this.getOffset(),
+            overOffset = this.getOffset();
+        return overOffset.left + overOffset.width > ownOffset.left
+            && ownOffset.left + ownOffset.width > overOffset.left;
     }
 
     private getOffset() {
@@ -124,44 +151,6 @@ class Sticker {
             height: this.dims.height
         }
     }
-
-
-
-
-/*
-    reposition(top) {
-        var els = this.els,
-            dims = this.dims,
-            minY = dims.minY,
-            maxY = dims.maxY;
-
-        top = top - els.$placeholder.offset().top;
-        if (this.behavior === 'bottom') {
-            top = top + dims.window.height - dims.placeholder.height;
-        }
-
-        this.unStick();
-        if (top <= minY) {
-            top = minY;
-        } else if (top >= maxY) {
-            top = maxY;
-        } else {
-            this.stick();
-        }
-
-        els.$sticker.css({'top': top});
-        this.resetOffset();
-    }
-
-
-    canStickTo(sticker:Sticker):boolean {
-        var ownDims = this.dims.sticker,
-            overDims = sticker.getDims().sticker;
-        return overDims.offset.left + overDims.width > ownDims.offset.left
-            && ownDims.offset.left + ownDims.width > overDims.offset.left;
-    }
-*/
-
 }
 export = Sticker;
 
