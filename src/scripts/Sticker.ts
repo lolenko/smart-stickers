@@ -107,7 +107,7 @@ class Sticker {
     }
 
     reposition(top:number):Sticker {
-        top = top - this.els.$placeholder.offset().top;
+        top = top - this.els.$context.offset().top;
 
         this.unStick();
         if (top <= this.dims.minTop) {
