@@ -6,11 +6,18 @@ class Sticker {
         $placeholder?:JQuery;
         $context?:JQuery;
     };
+    private _isStuck:boolean = false;
     private defaultInlineStyles:string;
     private isWrappedWithPlaceholder:boolean = false;
     private dims:{
         maxTop?:number;
         minTop?:number;
+        height?:number;
+        width?:number;
+        offset?:{
+            left:number;
+            top:number;
+        };
     };
 
     constructor(element, options?) {
@@ -64,7 +71,7 @@ class Sticker {
         return this;
     }
 
-    private unwrapPlaceholder() {
+    private unwrapPlaceholder():Sticker {
         if (!this.isWrappedWithPlaceholder) {
             return this;
         }
@@ -74,26 +81,48 @@ class Sticker {
         return this;
     }
 
-    private resetInlineStylesToDefault() {
+    private resetInlineStylesToDefault():Sticker {
         this.els.$sticker.attr('style', this.defaultInlineStyles);
+        return this;
     }
 
-    private updateDims() {
+    private updateDims():Sticker {
         this.dims = {
             minTop: 0,
             maxTop: this.els.$context.height() - this.els.$sticker.outerHeight(),
-            height: this.els.$sticker.outerHeight()
+            height: this.els.$sticker.outerHeight(),
+            width: this.els.$sticker.outerWidth(),
+            offset: this.els.$sticker.offset()
         };
+        return this;
     }
 
-    private resetPlaceholder() {
+    private resetPlaceholder():Sticker {
         this.unwrapPlaceholder();
         this.wrapWithPlaceholder();
         this.updateDims();
+        return this;
     }
 
-    private reposition(top) {
+    private reposition(top:number):Sticker {
+        return this;
+    }
 
+    private isStuck():boolean {
+        return this._isStuck;
+    }
+
+    private canStickTo(sticker:Sticker):boolean {
+        return false;
+    }
+
+    private getOffset() {
+        return {
+            left: this.dims.offset.left,
+            top: this.dims.offset.top,
+            width: this.dims.width,
+            height: this.dims.height
+        }
     }
 
 
