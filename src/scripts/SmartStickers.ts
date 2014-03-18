@@ -34,11 +34,11 @@ class SmartStickers {
             height = scrollTop;
 
         for (var k = prevStickerIndex; k >= 0; k--) {
-            var curSticker = this.stickers[k];
+            var prevSticker = this.stickers[k];
 
-            if (curSticker.isStuck() && sticker.canStickTo(curSticker)) {
-                var curStickerOffset = curSticker.getOffset();
-                height = curStickerOffset.top + curStickerOffset.height + scrollTop;
+            if (prevSticker.isStuck() && sticker.canStickTo(prevSticker)) {
+                var prevStickerOffset = prevSticker.getOffset();
+                height = prevStickerOffset.top + prevStickerOffset.height + scrollTop;
                 break;
             }
         }
