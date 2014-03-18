@@ -39,10 +39,6 @@ class Sticker {
         }
         var boxCSS = {
             margin: null,
-            borderWidth: null,
-            padding: null,
-            height: null,
-            width: null,
             boxSizing: null,
             float: null,
             clear: null,
@@ -55,20 +51,30 @@ class Sticker {
             bottom: 'auto',
             left: 0
         };
-        var placeholderPositionCSS = $.extend({}, positionCSS);
+
+        var placeholderCSS:any = {};
         for (var CSSprop in boxCSS) {
-            boxCSS[CSSprop] = this.els.$sticker.css(CSSprop);
+            placeholderCSS[CSSprop] = this.els.$sticker.css(CSSprop);
         }
+        placeholderCSS.width = this.els.$sticker.outerWidth();
+        placeholderCSS.height = this.els.$sticker.outerHeight();
+
+        var placeholderPositionCSS = $.extend({}, positionCSS);
         for (var CSSprop in placeholderPositionCSS) {
             placeholderPositionCSS[CSSprop] = this.els.$sticker.css(CSSprop);
         }
         placeholderPositionCSS['position'] = (placeholderPositionCSS['position'] == 'relative' || placeholderPositionCSS['position'] == 'static') ? 'relative' : placeholderPositionCSS['position']
-        var placeholderCSS = $.extend({}, placeholderPositionCSS, boxCSS);
+        $.extend(placeholderCSS, placeholderPositionCSS);
 
         this.els.$placeholder = $('<div></div>');
         this.els.$placeholder.css(placeholderCSS);
         this.els.$sticker.wrap(this.els.$placeholder);
-        this.els.$sticker.css($.extend({}, positionCSS, boxCSS));
+        this.els.$sticker.css($.extend({}, positionCSS, {
+            width: '100%',
+            height: '100%',
+            boxSizing: 'border-box',
+            margin: 0
+        }));
         this.isWrappedWithPlaceholder = true;
         return this;
     }
