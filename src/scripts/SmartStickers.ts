@@ -1,8 +1,7 @@
 import jquery = require('vendor/jquery');
 import Sticker = require('./Sticker');
-if (jquery);
-var $window = $(window);
 
+if (jquery);
 var $window = $(window);
 
 class SmartStickers {
@@ -26,8 +25,24 @@ class SmartStickers {
 
     private reposition(top) {
         this.stickers.forEach((sticker:Sticker) => {
-            sticker.reposition(top);
+            sticker.reposition(this.getStackHeight(sticker, top));
         });
+    }
+
+    private getStackHeight(sticker:Sticker, top:number) {
+        var prevStickerIndex = this.stickers.indexOf(sticker) - 1,
+            height = top;
+
+        for (var k = prevStickerIndex; k >= 0; k--) {
+            var curSticker = this.stickers[k];
+
+            if (curSticker.isStuck() && sticker.canStickTo(curSticker)) {
+                var curStickerOffset = curSticker.getOffset();
+                height += curStickerOffset.top + curStickerOffset.height;
+                break;
+            }
+        }
+        return height;
     }
 }
 

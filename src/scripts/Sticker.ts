@@ -128,7 +128,7 @@ class Sticker {
         return this;
     }
 
-    private isStuck():boolean {
+    public isStuck():boolean {
         return this._isStuck;
     }
 
@@ -142,14 +142,14 @@ class Sticker {
         return this;
     }
 
-    private canStickTo(sticker:Sticker):boolean {
+    public canStickTo(sticker:Sticker):boolean {
         var ownOffset = this.getOffset(),
             overOffset = this.getOffset();
         return overOffset.left + overOffset.width > ownOffset.left
             && ownOffset.left + ownOffset.width > overOffset.left;
     }
 
-    private getOffset() {
+    public getOffset() {
         return {
             left: this.dims.offset.left,
             top: this.dims.offset.top,
