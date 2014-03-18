@@ -26,7 +26,7 @@ class Sticker {
         this.els = {};
         this.els.$sticker = $(element);
         this.els.$context = this.els.$sticker.parent();
-        this.defaultInlineStyles = this.els.$sticker.attr('style');
+        this.defaultInlineStyles = this.els.$sticker.attr('style') || '';
         this.wrapWithPlaceholder();
         this.updateDims();
         $window.on('resize', this.resetPlaceholder.bind(this));
