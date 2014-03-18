@@ -112,8 +112,8 @@ class Sticker {
         return this;
     }
 
-    reposition(top:number):Sticker {
-        top = top - this.els.$context.offset().top;
+    reposition(scrollTop:number):Sticker {
+        var top = scrollTop - this.els.$context.offset().top;
 
         this.unStick();
         if (top <= this.dims.minTop) {

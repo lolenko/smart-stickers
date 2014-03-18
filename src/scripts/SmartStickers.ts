@@ -23,22 +23,22 @@ class SmartStickers {
         this.stickers.push(sticker);
     }
 
-    private reposition(top) {
+    private reposition(scrollTop) {
         this.stickers.forEach((sticker:Sticker) => {
-            sticker.reposition(this.getStackHeight(sticker, top));
+            sticker.reposition(this.getStackHeight(sticker, scrollTop));
         });
     }
 
-    private getStackHeight(sticker:Sticker, top:number) {
+    private getStackHeight(sticker:Sticker, scrollTop:number) {
         var prevStickerIndex = this.stickers.indexOf(sticker) - 1,
-            height = top;
+            height = scrollTop;
 
         for (var k = prevStickerIndex; k >= 0; k--) {
             var curSticker = this.stickers[k];
 
             if (curSticker.isStuck() && sticker.canStickTo(curSticker)) {
                 var curStickerOffset = curSticker.getOffset();
-                height += curStickerOffset.top + curStickerOffset.height;
+                height = curStickerOffset.top + curStickerOffset.height + scrollTop;
                 break;
             }
         }
