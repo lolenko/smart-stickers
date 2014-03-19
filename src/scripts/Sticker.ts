@@ -69,6 +69,7 @@ class Sticker {
         this.els.$placeholder = $('<div></div>');
         this.els.$placeholder.css(placeholderCSS);
         this.els.$sticker.wrap(this.els.$placeholder);
+        this.els.$placeholder = this.els.$sticker.parent();
         this.els.$sticker.css($.extend({}, positionCSS, {
             width: '100%',
             height: '100%',
@@ -97,7 +98,7 @@ class Sticker {
     private updateDims():Sticker {
         this.dims = {
             minTop: 0,
-            maxTop: this.els.$context.height() - this.els.$sticker.outerHeight(),
+            maxTop: (this.els.$context.offset().top + this.els.$context.outerHeight()) - (this.els.$sticker.outerHeight() + this.els.$placeholder.offset().top),
             height: this.els.$sticker.outerHeight(),
             width: this.els.$sticker.outerWidth(),
             offset: this.els.$sticker.offset()
@@ -113,7 +114,7 @@ class Sticker {
     }
 
     reposition(scrollTop:number):Sticker {
-        var top = scrollTop - this.els.$context.offset().top;
+        var top = scrollTop - this.els.$placeholder.offset().top;
 
         this.unStick();
         if (top <= this.dims.minTop) {
