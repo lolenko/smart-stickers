@@ -116,16 +116,18 @@ class Sticker {
     reposition(scrollTop:number):Sticker {
         var top = scrollTop - this.els.$placeholder.offset().top;
 
-        this.unStick();
         if (top <= this.dims.minTop) {
             top = this.dims.minTop;
+            this.unStick();
         } else if (top >= this.dims.maxTop) {
             top = this.dims.maxTop;
+            this.stick();
         } else {
             this.stick();
         }
 
         this.els.$sticker.css({'top': top});
+        this.updateDims();
         return this;
     }
 
@@ -145,7 +147,7 @@ class Sticker {
 
     public canStickTo(sticker:Sticker):boolean {
         var ownOffset = this.getOffset(),
-            overOffset = this.getOffset();
+            overOffset = sticker.getOffset();
         return overOffset.left + overOffset.width > ownOffset.left
             && ownOffset.left + ownOffset.width > overOffset.left;
     }

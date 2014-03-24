@@ -8,8 +8,7 @@ class SmartStickers {
     private stickers:Sticker[] = [];
 
     constructor() {
-        var $stickers = $('.sticker');
-        $stickers.each((i, el) => {
+        $('.sticker').each((i, el) => {
             this.register(new Sticker(el));
         });
         $window.on('scroll', this.onScroll.bind(this));
@@ -23,13 +22,14 @@ class SmartStickers {
         this.stickers.push(sticker);
     }
 
-    private reposition(scrollTop) {
+    private reposition(scrollTop:number) {
         this.stickers.forEach((sticker:Sticker) => {
             sticker.reposition(this.getStackHeight(sticker, scrollTop));
+//            sticker.reposition(scrollTop);
         });
     }
 
-    private getStackHeight(sticker:Sticker, scrollTop:number) {
+    private getStackHeight(sticker:Sticker, scrollTop:number):number {
         var prevStickerIndex = this.stickers.indexOf(sticker) - 1,
             height = scrollTop;
 
@@ -38,7 +38,7 @@ class SmartStickers {
 
             if (prevSticker.isStuck() && sticker.canStickTo(prevSticker)) {
                 var prevStickerOffset = prevSticker.getOffset();
-                height = prevStickerOffset.top + prevStickerOffset.height + scrollTop;
+                height = prevStickerOffset.top + prevStickerOffset.height;
                 break;
             }
         }
