@@ -16,11 +16,12 @@ class Sticker {
         minTop?:number;
         height?:number;
         width?:number;
+        placeholderOffsetTop?:number;
         offset?:{
             left:number;
             top:number;
         };
-    };
+    } = {};
 
     constructor(element, options?) {
         this.els = {};
@@ -28,7 +29,7 @@ class Sticker {
         this.els.$context = this.els.$sticker.parent();
         this.defaultInlineStyles = this.els.$sticker.attr('style') || '';
         this.wrapWithPlaceholder();
-        this.updateDims();
+        this.updateDims(true);
         $window.on('resize', this.resetPlaceholder.bind(this));
 
     }
@@ -95,32 +96,38 @@ class Sticker {
         return this;
     }
 
-    private updateDims():Sticker {
-        this.dims = {
-            minTop: 0,
-            maxTop: (this.els.$context.offset().top + this.els.$context.outerHeight()) - (this.els.$sticker.outerHeight() + this.els.$placeholder.offset().top),
-            height: this.els.$sticker.outerHeight(),
-            width: this.els.$sticker.outerWidth(),
-            offset: this.els.$sticker.offset()
-        };
+    private updateDims(afterResize?:boolean):Sticker {
+        var dims = this.dims;
+        var els = this.els;
+
+        dims.offset = els.$sticker.offset();
+        if (afterResize) {
+            dims.height = els.$sticker.outerHeight();
+            dims.width = els.$sticker.outerWidth();
+            dims.placeholderOffsetTop = els.$placeholder.offset().top;
+            dims.minTop = 0;
+            dims.maxTop = (els.$context.offset().top + els.$context.outerHeight() - parseInt(els.$context.css('padding-bottom'), 10)) - (dims.height + dims.placeholderOffsetTop);
+        }
+
         return this;
     }
 
     private resetPlaceholder():Sticker {
         this.unwrapPlaceholder();
         this.wrapWithPlaceholder();
-        this.updateDims();
+        this.updateDims(true);
         return this;
     }
 
     reposition(scrollTop:number):Sticker {
-        var top = scrollTop - this.els.$placeholder.offset().top;
+        var dims = this.dims;
+        var top = scrollTop - dims.placeholderOffsetTop;
 
-        if (top <= this.dims.minTop) {
-            top = this.dims.minTop;
+        if (top <= dims.minTop) {
+            top = dims.minTop;
             this.unStick();
-        } else if (top >= this.dims.maxTop) {
-            top = this.dims.maxTop;
+        } else if (top >= dims.maxTop) {
+            top = dims.maxTop;
             this.stick();
         } else {
             this.stick();
