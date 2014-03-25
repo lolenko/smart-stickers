@@ -75,7 +75,8 @@ class Sticker {
             width: '100%',
             height: '100%',
             boxSizing: 'border-box',
-            margin: 0
+            margin: placeholderCSS.margin,
+            left: - parseInt(this.els.$placeholder.css('margin-left'), 10)
         }));
         this.isWrappedWithPlaceholder = true;
         return this;
@@ -105,7 +106,7 @@ class Sticker {
             dims.height = els.$sticker.outerHeight();
             dims.width = els.$sticker.outerWidth();
             dims.placeholderOffsetTop = els.$placeholder.offset().top;
-            dims.minTop = 0;
+            dims.minTop = - parseInt(els.$placeholder.css('margin-top'), 10);
             dims.maxTop = (els.$context.offset().top + els.$context.outerHeight() - parseInt(els.$context.css('padding-bottom'), 10)) - (dims.height + dims.placeholderOffsetTop);
         }
 
