@@ -25,7 +25,6 @@ class SmartStickers {
     private reposition(scrollTop:number) {
         this.stickers.forEach((sticker:Sticker) => {
             sticker.reposition(this.getStackHeight(sticker, scrollTop));
-//            sticker.reposition(scrollTop);
         });
     }
 

@@ -156,7 +156,8 @@ class Sticker {
     public canStickTo(sticker:Sticker):boolean {
         var ownOffset = this.getOffset(),
             overOffset = sticker.getOffset();
-        return overOffset.left + overOffset.width > ownOffset.left
+        return !$.contains(sticker.getRoot()[0], this.getRoot()[0])
+            && overOffset.left + overOffset.width > ownOffset.left
             && ownOffset.left + ownOffset.width > overOffset.left;
     }
 
@@ -167,6 +168,10 @@ class Sticker {
             width: this.dims.width,
             height: this.dims.height
         }
+    }
+
+    public getRoot():JQuery {
+        return this.els.$sticker;
     }
 }
 export = Sticker;
