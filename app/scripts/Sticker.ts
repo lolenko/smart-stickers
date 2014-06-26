@@ -154,11 +154,38 @@ class Sticker {
     }
 
     public canStickTo(sticker:Sticker):boolean {
+        return !this.contains(sticker) && sticker.isStuck()
+            && this.compareHorizontalTo(sticker) == 0;
+    }
+
+    public contains(sticker:Sticker):boolean {
+        return $.contains(sticker.getRoot()[0], this.getRoot()[0])
+    }
+
+    public compareHorizontalTo(sticker:Sticker):number {
         var ownOffset = this.getOffset(),
             overOffset = sticker.getOffset();
-        return !$.contains(sticker.getRoot()[0], this.getRoot()[0])
-            && overOffset.left + overOffset.width > ownOffset.left
-            && ownOffset.left + ownOffset.width > overOffset.left;
+
+        if (overOffset.left + overOffset.width < ownOffset.left) {
+            return 1;
+        } else if (ownOffset.left + ownOffset.width < overOffset.left) {
+            return -1;
+        } else {
+            return 0
+        }
+    }
+
+    public compareVerticalTo(sticker:Sticker):number {
+        var ownOffset = this.getOffset(),
+            overOffset = sticker.getOffset();
+
+        if (overOffset.top + overOffset.height < ownOffset.top) {
+            return 1;
+        } else if (ownOffset.top + ownOffset.height < overOffset.top) {
+            return -1;
+        } else {
+            return 0
+        }
     }
 
     public getOffset() {
