@@ -25,49 +25,52 @@ var $ = require('gulp-load-plugins')();
 var del = require('del');
 var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
-var pagespeed = require('psi');
 var reload = browserSync.reload;
 
 // Optimize Images
 gulp.task('images', function () {
-  return gulp.src('app/images/**/*')
-    .pipe($.cache($.imagemin({
-      progressive: true,
-      interlaced: true
-    })))
-    .pipe(gulp.dest('dist/images'))
-    .pipe(reload({stream: true, once: true}))
-    .pipe($.size({title: 'images'}));
+    return gulp.src('app/images/**/*')
+        .pipe($.cache($.imagemin({
+            progressive: true,
+            interlaced: true
+        })))
+        .pipe(gulp.dest('dist/images'))
+        .pipe(reload({stream: true, once: true}))
+        .pipe($.size({title: 'images'}));
 });
 
 
 // Compile Less Files You Added (app/styles)
 gulp.task('styles', function () {
-  return gulp.src(['app/styles/**/*.less'])
-    .pipe($.less())
-    .pipe($.autoprefixer('last 1 version'))
-    .pipe(gulp.dest('dist/styles'))
-    .pipe($.size({title: 'styles'}));
+    return gulp.src(['app/styles/**/*.less'])
+        .pipe($.less())
+        .pipe($.autoprefixer('last 1 version'))
+        .pipe(gulp.dest('dist/styles'))
+        .pipe(reload({stream: true, once: true}))
+        .pipe($.size({title: 'styles'}));
 });
 
 
 gulp.task('copy:html', function () {
-  return gulp.src('app/**/*.html')
-    .pipe(gulp.dest('dist'))
-    .pipe($.size({title: 'html'}));
+    return gulp.src('app/**/*.html')
+        .pipe(gulp.dest('dist'))
+        .pipe(reload({stream: true, once: true}))
+        .pipe($.size({title: 'html'}));
 });
 
 gulp.task('typescript', function () {
-  return gulp.src('app/scripts/**/*.ts')
-    .pipe($.tsc())
-    .pipe(gulp.dest('dist/scripts'))
-    .pipe($.size({title: 'typescript'}));
+    return gulp.src('app/scripts/**/*.ts')
+        .pipe($.tsc({module: 'amd'}))
+        .pipe(gulp.dest('dist/scripts'))
+        .pipe(reload({stream: true, once: true}))
+        .pipe($.size({title: 'typescript'}));
 });
 
 gulp.task('copy:js', function () {
-  return gulp.src('app/scripts/**/*.js')
-    .pipe(gulp.dest('dist/scripts'))
-    .pipe($.size({title: 'copy:js'}));
+    return gulp.src('app/scripts/**/*.js')
+        .pipe(gulp.dest('dist/scripts'))
+        .pipe(reload({stream: true, once: true}))
+        .pipe($.size({title: 'copy:js'}));
 });
 
 gulp.task('copy', ['copy:js', 'copy:html']);
@@ -77,32 +80,21 @@ gulp.task('clean', del.bind(null, ['dist']));
 
 // Watch Files For Changes & Reload
 gulp.task('serve', function () {
-  browserSync.init({
-    server: {
-      baseDir: ['app', '.tmp']
-    },
-    notify: false
-  });
+    browserSync.init({
+        server: {
+            baseDir: ['dist']
+        },
+        notify: false
+    });
 
-  gulp.watch(['app/**/*.html'], reload);
-  gulp.watch(['app/styles/**/*.{css,less}'], ['styles']);
-  gulp.watch(['.tmp/styles/**/*.css'], reload);
-  gulp.watch(['app/scripts/**/*.js'], ['jshint']);
-  gulp.watch(['app/images/**/*'], ['images']);
+    gulp.watch(['app/**/*.html'], ['copy:html']);
+    gulp.watch(['app/styles/**/*.{css,less}'], ['styles']);
+    gulp.watch(['app/scripts/**/*.ts'], ['typescript']);
+    gulp.watch(['app/scripts/**/*.js'], ['copy:js']);
+    gulp.watch(['app/images/**/*'], ['images']);
 });
 
 // Build Production Files, the Default Task
 gulp.task('default', ['clean'], function (cb) {
-  runSequence('styles', ['typescript', 'copy', 'images'], cb);
+    runSequence(['styles', 'typescript', 'copy', 'images'], cb);
 });
-
-// Run PageSpeed Insights
-// Update `url` below to the public URL for your site
-gulp.task('pagespeed', pagespeed.bind(null, {
-  // By default, we use the PageSpeed Insights
-  // free (no API key) tier. You can use a Google
-  // Developer API key if you have one. See
-  // http://goo.gl/RkN0vE for info key: 'YOUR_API_KEY'
-  url: 'https://example.com',
-  strategy: 'mobile'
-}));
