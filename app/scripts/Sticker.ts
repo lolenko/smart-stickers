@@ -129,7 +129,7 @@ class Sticker {
             this.unStick();
         } else if (top >= dims.maxTop) {
             top = dims.maxTop;
-            this.stick();
+            this.unStick();
         } else {
             this.stick();
         }
@@ -155,7 +155,8 @@ class Sticker {
 
     public canStickTo(sticker:Sticker):boolean {
         return !this.contains(sticker) && sticker.isStuck()
-            && this.compareHorizontalTo(sticker) == 0;
+            && this.compareHorizontalTo(sticker) == 0
+            && this.compareVerticalTo(sticker) > 0;
     }
 
     public contains(sticker:Sticker):boolean {
@@ -167,9 +168,9 @@ class Sticker {
             overOffset = sticker.getOffset();
 
         if (overOffset.left + overOffset.width < ownOffset.left) {
-            return 1;
+            return ownOffset.left - (overOffset.left + overOffset.width);
         } else if (ownOffset.left + ownOffset.width < overOffset.left) {
-            return -1;
+            return (ownOffset.left + ownOffset.width) - overOffset.left;
         } else {
             return 0
         }
@@ -180,9 +181,9 @@ class Sticker {
             overOffset = sticker.getOffset();
 
         if (overOffset.top + overOffset.height < ownOffset.top) {
-            return 1;
+            return ownOffset.top - (overOffset.top + overOffset.height);
         } else if (ownOffset.top + ownOffset.height < overOffset.top) {
-            return -1;
+            return (ownOffset.top + ownOffset.height) - overOffset.top;
         } else {
             return 0
         }

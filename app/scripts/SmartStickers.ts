@@ -11,15 +11,7 @@ class SmartStickers {
         $('.sticker').each((i, el) => {
             this.add(new Sticker(el));
         });
-        this.sort();
         $window.on('scroll', this.onScroll.bind(this));
-    }
-
-    private sort() {
-        this.stickers.sort(function(prev, next) {
-            return prev.compareVerticalTo(next);
-        });
-        console.log(this.stickers);
     }
 
     private onScroll() {
@@ -37,19 +29,32 @@ class SmartStickers {
     }
 
     private getStackHeight(sticker:Sticker, scrollTop:number):number {
-        var prevStickerIndex = this.stickers.indexOf(sticker) - 1,
-            height = scrollTop;
-
-        for (var k = prevStickerIndex; k >= 0; k--) {
-            var prevSticker = this.stickers[k];
-
-            if (sticker.canStickTo(prevSticker)) {
-                var prevStickerOffset = prevSticker.getOffset();
-                height = prevStickerOffset.top + prevStickerOffset.height;
-                break;
+        var candidatesToStick = this.stickers.filter(sticker.canStickTo.bind(sticker));
+        if (candidatesToStick.length == 0) {
+            return scrollTop;
+        }
+        var height = scrollTop;
+        for (var i = 0, len = candidatesToStick.length; i < len; i++) {
+            if (height < candidatesToStick[i].getOffset().top + candidatesToStick[i].getOffset().height) {
+                height = candidatesToStick[i].getOffset().top + candidatesToStick[i].getOffset().height;
             }
         }
         return height;
+
+
+//        var prevStickerIndex = this.stickers.indexOf(sticker) - 1,
+//            height = scrollTop;
+//
+//        for (var k = prevStickerIndex; k >= 0; k--) {
+//            var prevSticker = this.stickers[k];
+//
+//            if (sticker.canStickTo(prevSticker)) {
+//                var prevStickerOffset = prevSticker.getOffset();
+//                height = prevStickerOffset.top + prevStickerOffset.height;
+//                break;
+//            }
+//        }
+//        return height;
     }
 }
 
