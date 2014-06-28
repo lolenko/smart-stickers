@@ -22,8 +22,11 @@ class Sticker {
             top:number;
         };
     } = {};
+    private parent:Sticker;
+    private childrens:Sticker[];
 
     constructor(element, options?) {
+        this.childrens = [];
         this.els = {};
         this.els.$sticker = $(element);
         this.els.$context = this.els.$sticker.parent();
@@ -122,6 +125,9 @@ class Sticker {
 
     reposition(scrollTop:number):Sticker {
         var dims = this.dims;
+        if (this.parent) {
+            scrollTop = this.parent.getOffset().top + this.parent.getOffset().height;
+        }
         var top = scrollTop - dims.placeholderOffsetTop;
 
         if (top <= dims.minTop) {
@@ -136,6 +142,11 @@ class Sticker {
 
         this.els.$sticker.css({'top': top});
         this.updateDims();
+
+        this.childrens.forEach((sticker) => {
+            sticker.reposition(scrollTop);
+        });
+
         return this;
     }
 
@@ -154,7 +165,7 @@ class Sticker {
     }
 
     public canStickTo(sticker:Sticker):boolean {
-        return !this.contains(sticker) && sticker.isStuck()
+        return !this.contains(sticker)
             && this.compareHorizontalTo(sticker) == 0
             && this.compareVerticalTo(sticker) > 0;
     }
@@ -200,6 +211,14 @@ class Sticker {
 
     public getRoot():JQuery {
         return this.els.$sticker;
+    }
+
+    public addChild(sticker:Sticker) {
+        this.childrens.push(sticker);
+    }
+
+    public setParent(sticker:Sticker) {
+        this.parent = sticker;
     }
 }
 export = Sticker;

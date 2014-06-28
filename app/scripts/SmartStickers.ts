@@ -6,11 +6,14 @@ var $window = $(window);
 
 class SmartStickers {
     private stickers:Sticker[] = [];
+    private rootChildrens:Sticker[] = []
 
     constructor() {
         $('.sticker').each((i, el) => {
             this.add(new Sticker(el));
         });
+        this.buildTree();
+        console.log(this.rootChildrens);
         $window.on('scroll', this.onScroll.bind(this));
     }
 
@@ -22,39 +25,29 @@ class SmartStickers {
         this.stickers.push(sticker);
     }
 
-    private reposition(scrollTop:number) {
+    private buildTree() {
         this.stickers.forEach((sticker:Sticker) => {
-            sticker.reposition(this.getStackHeight(sticker, scrollTop));
+            var candidatesToStick = this.stickers.filter(sticker.canStickTo.bind(sticker));
+            console.log(sticker, candidatesToStick);
+            if (candidatesToStick.length > 0) {
+                var mainCandidate = candidatesToStick[0];
+                for (var i = 1, len = candidatesToStick.length; i < len; i++) {
+                    if (mainCandidate.getOffset().top + mainCandidate.getOffset().height < candidatesToStick[i].getOffset().top + candidatesToStick[i].getOffset().height) {
+                        mainCandidate = candidatesToStick[i];
+                    }
+                }
+                sticker.setParent(mainCandidate);
+                mainCandidate.addChild(sticker);
+            } else {
+                this.rootChildrens.push(sticker);
+            }
         });
     }
 
-    private getStackHeight(sticker:Sticker, scrollTop:number):number {
-        var candidatesToStick = this.stickers.filter(sticker.canStickTo.bind(sticker));
-        if (candidatesToStick.length == 0) {
-            return scrollTop;
-        }
-        var height = scrollTop;
-        for (var i = 0, len = candidatesToStick.length; i < len; i++) {
-            if (height < candidatesToStick[i].getOffset().top + candidatesToStick[i].getOffset().height) {
-                height = candidatesToStick[i].getOffset().top + candidatesToStick[i].getOffset().height;
-            }
-        }
-        return height;
-
-
-//        var prevStickerIndex = this.stickers.indexOf(sticker) - 1,
-//            height = scrollTop;
-//
-//        for (var k = prevStickerIndex; k >= 0; k--) {
-//            var prevSticker = this.stickers[k];
-//
-//            if (sticker.canStickTo(prevSticker)) {
-//                var prevStickerOffset = prevSticker.getOffset();
-//                height = prevStickerOffset.top + prevStickerOffset.height;
-//                break;
-//            }
-//        }
-//        return height;
+    private reposition(scrollTop:number) {
+        this.rootChildrens.forEach((sticker:Sticker) => {
+            sticker.reposition(scrollTop);
+        });
     }
 }
 
