@@ -23,7 +23,7 @@ class Sticker {
         };
     } = {};
     private parent:Sticker;
-    private childrens:Sticker[];
+    childrens:Sticker[];
 
     constructor(element, options?) {
         this.childrens = [];
@@ -215,6 +215,10 @@ class Sticker {
 
     public addChild(sticker:Sticker) {
         this.childrens.push(sticker);
+    }
+
+    public getStackHeight() {
+        return this.getOffset().height + (this.parent ? this.parent.getStackHeight() : 0);
     }
 
     public setParent(sticker:Sticker) {
