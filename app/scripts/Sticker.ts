@@ -22,6 +22,7 @@ class Sticker {
             top:number;
         };
     } = {};
+    private startOffset;
     private parent:Sticker;
     childrens:Sticker[];
 
@@ -33,6 +34,7 @@ class Sticker {
         this.defaultInlineStyles = this.els.$sticker.attr('style') || '';
         this.wrapWithPlaceholder();
         this.updateDims(true);
+        this.startOffset = $.extend({}, this.getOffset(), true);
         $window.on('resize', this.resetPlaceholder.bind(this));
 
     }
@@ -188,8 +190,8 @@ class Sticker {
     }
 
     public compareVerticalTo(sticker:Sticker):number {
-        var ownOffset = this.getOffset(),
-            overOffset = sticker.getOffset();
+        var ownOffset = this.getStartOffset(),
+            overOffset = sticker.getStartOffset();
 
         if (overOffset.top + overOffset.height < ownOffset.top) {
             return ownOffset.top - (overOffset.top + overOffset.height);
@@ -209,20 +211,32 @@ class Sticker {
         }
     }
 
-    public getRoot():JQuery {
-        return this.els.$sticker;
+    public getStartOffset() {
+        return this.startOffset;
     }
 
-    public addChild(sticker:Sticker) {
-        this.childrens.push(sticker);
+    public getRoot():JQuery {
+        return this.els.$sticker;
     }
 
     public getStackHeight() {
         return this.getOffset().height + (this.parent ? this.parent.getStackHeight() : 0);
     }
 
+    public addChild(sticker:Sticker) {
+        this.childrens.push(sticker);
+    }
+
+    public getChildrens() {
+        return this.childrens;
+    }
+
     public setParent(sticker:Sticker) {
         this.parent = sticker;
+    }
+
+    public getParent():Sticker {
+        return this.parent;
     }
 }
 export = Sticker;
