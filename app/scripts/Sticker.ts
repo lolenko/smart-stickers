@@ -130,7 +130,7 @@ class Sticker {
         if (this.parent) {
             scrollTop = this.parent.getOffset().top + this.parent.getOffset().height;
         }
-        var top = scrollTop - dims.placeholderOffsetTop;
+        var top = scrollTop - this.els.$placeholder.offset().top;
 
         if (top <= dims.minTop) {
             top = dims.minTop;
