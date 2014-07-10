@@ -2,30 +2,32 @@ import jquery = require('vendor/jquery');
 import Sticker = require('./Sticker');
 
 if (jquery);
-var $window = $(window);
 
 class SmartStickers {
     private stickers:Sticker[] = [];
     private rootChildrens:Sticker[] = [];
     private scrollTop:number;
+    private $root:JQuery;
 
-    constructor() {
-        $('.sticker').each((i, el) => {
-            setTimeout(() => {
-                this.add(new Sticker(el));
-            }, Math.random() * 5000)
-
+    constructor(rootEl) {
+        this.$root = $(rootEl);
+        this.$root.on('register.sticker', (ev, data) => {
+            ev.stopPropagation();
+            this.add(data.sticker);
         });
-        $window.on('scroll', this.onScroll.bind(this));
+        this.$root.on('scroll', this.onScroll.bind(this));
+        setTimeout(() => {
+            console.log(this.rootChildrens);
+        },5000);
     }
 
     private onScroll() {
-        this.scrollTop = $window.scrollTop();
+        this.scrollTop = this.$root.scrollTop();
         this.reposition(this.scrollTop);
     }
 
     // Вставляет новый стикер на нужное место в дереве
-    private add(sticker:Sticker) {
+    public add(sticker:Sticker) {
         var candidatesToStick = this.stickers.filter(sticker.canStickTo.bind(sticker));
         if (candidatesToStick.length > 0) {
             var mainCandidate = candidatesToStick[0];
@@ -44,7 +46,9 @@ class SmartStickers {
                     i--;
                 }
             }
-            this.rootChildrens.push(sticker);
+            if (this.rootChildrens.indexOf(sticker) < 0) {
+                this.rootChildrens.push(sticker);
+            }
         }
 
         if (this.stickers.indexOf(sticker) < 0) {

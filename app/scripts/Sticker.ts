@@ -36,7 +36,7 @@ class Sticker {
         this.updateDims(true);
         this.startOffset = $.extend({}, this.getOffset(), true);
         $window.on('resize', this.resetPlaceholder.bind(this));
-
+        this.els.$sticker.trigger('register.sticker', {sticker: this});
     }
 
     private wrapWithPlaceholder() {

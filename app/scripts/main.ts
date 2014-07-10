@@ -2,6 +2,7 @@
 
 import jquery = require('vendor/jquery');
 import SmartStickers = require('SmartStickers');
+import Sticker = require('Sticker');
 
 if (jquery) $.noop();
 
@@ -23,4 +24,7 @@ if (jquery) $.noop();
     (например таким контекстов может быть элементы с оверфлоу: скролл или ифрэйм)
     4. Решить технические проблеммы скачющих стиков в браузерах с большим шагом скролла*/
 
-new SmartStickers();
+var ss = new SmartStickers(window);
+$('.sticker').each(function(i, el) {
+    ss.add(new Sticker(el));
+});
