@@ -16,7 +16,6 @@ class SmartStickers {
             }, Math.random() * 5000)
 
         });
-        console.log(this.rootChildrens);
         $window.on('scroll', this.onScroll.bind(this));
     }
 
@@ -35,33 +34,28 @@ class SmartStickers {
                     mainCandidate = candidatesToStick[i];
                 }
             }
+            mainCandidate.attach(sticker);
             // Пересооденить подходящие дочерние стикеру к новому
-            var candidateChildrens = mainCandidate.childrens;
+            var candidateChildrens = mainCandidate.getChildrens();
             for (var i = 0; i < candidateChildrens.length; i++) {
-                if (!candidateChildrens[i].canStickTo(sticker)) {
-                    continue;
+                if (candidateChildrens[i].canStickTo(sticker)) {
+                    sticker.attach(candidateChildrens[i]);
+                    i--;
                 }
-                var tempSticker = candidateChildrens.splice(i, 1)[0];
-                tempSticker.setParent(sticker);
-                sticker.addChild(tempSticker);
-                i--;
             }
 
-            sticker.setParent(mainCandidate);
-            mainCandidate.addChild(sticker);
         } else {
             var candidateChildrens = this.rootChildrens;
             for (var i = 0; i < candidateChildrens.length; i++) {
-                if (!candidateChildrens[i].canStickTo(sticker)) {
-                    continue;
+                if (candidateChildrens[i].canStickTo(sticker)) {
+                    var tempSticker = candidateChildrens.splice(i, 1)[0];
+                    sticker.attach(tempSticker);
+                    i--;
                 }
-                var tempSticker = candidateChildrens.splice(i, 1)[0];
-                tempSticker.setParent(sticker);
-                sticker.addChild(tempSticker);
-                i--;
             }
             this.rootChildrens.push(sticker);
         }
+
         this.stickers.push(sticker);
         this.reposition(this.scrollTop);
     }

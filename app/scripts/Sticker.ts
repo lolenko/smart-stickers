@@ -231,12 +231,31 @@ class Sticker {
         return this.childrens;
     }
 
+    public emptyChildrens() {
+        this.childrens = [];
+        return this;
+    }
+
     public setParent(sticker:Sticker) {
         this.parent = sticker;
     }
 
     public getParent():Sticker {
         return this.parent;
+    }
+
+    public deattach() {
+        if (this.parent) {
+            var parentChildrens = this.parent.getChildrens();
+            parentChildrens.splice(parentChildrens.indexOf(this), 1);
+            this.setParent(null);
+        }
+    }
+
+    public attach(sticker:Sticker) {
+        sticker.deattach();
+        this.addChild(sticker);
+        sticker.setParent(this);
     }
 }
 export = Sticker;
