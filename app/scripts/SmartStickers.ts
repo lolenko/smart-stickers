@@ -35,15 +35,6 @@ class SmartStickers {
                 }
             }
             mainCandidate.attach(sticker);
-            // Пересооденить подходящие дочерние стикеру к новому
-            var candidateChildrens = mainCandidate.getChildrens();
-            for (var i = 0; i < candidateChildrens.length; i++) {
-                if (candidateChildrens[i].canStickTo(sticker)) {
-                    sticker.attach(candidateChildrens[i]);
-                    i--;
-                }
-            }
-
         } else {
             var candidateChildrens = this.rootChildrens;
             for (var i = 0; i < candidateChildrens.length; i++) {
@@ -56,7 +47,16 @@ class SmartStickers {
             this.rootChildrens.push(sticker);
         }
 
-        this.stickers.push(sticker);
+        if (this.stickers.indexOf(sticker) < 0) {
+            this.stickers.push(sticker);
+        }
+
+        // Пересооденить подходящие дочерние стикеру к новому
+        var candidateToBeChildrens = this.stickers.filter((candidate) => {
+            return candidate.canStickTo(sticker);
+        });
+        candidateToBeChildrens.forEach(this.add.bind(this));
+
         this.reposition(this.scrollTop);
     }
 
