@@ -26,5 +26,5 @@ if (jquery) $.noop();
 
 var ss = new SmartStickers(window);
 $('.sticker').each(function(i, el) {
-    ss.add(new Sticker(el));
+    new Sticker(el);
 });

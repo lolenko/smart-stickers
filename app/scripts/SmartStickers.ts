@@ -26,7 +26,6 @@ class SmartStickers {
         this.reposition(this.scrollTop);
     }
 
-    // Вставляет новый стикер на нужное место в дереве
     public add(sticker:Sticker) {
         var candidatesToStick = this.stickers.filter(sticker.canStickTo.bind(sticker));
         if (candidatesToStick.length > 0) {

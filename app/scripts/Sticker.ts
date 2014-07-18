@@ -157,11 +157,13 @@ class Sticker {
     }
 
     private stick():Sticker {
+        this.els.$sticker.addClass('_is-stuck');
         this._isStuck = true;
         return this;
     }
 
     private unStick():Sticker {
+        this.els.$sticker.removeClass('_is-stuck');
         this._isStuck = false;
         return this;
     }
