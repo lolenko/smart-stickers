@@ -1,4 +1,5 @@
 import jquery = require('vendor/jquery');
+import SmartStickers = require('./SmartStickers');
 if (jquery);
 var $window = $(window);
 
@@ -8,6 +9,7 @@ class Sticker {
         $placeholder?:JQuery;
         $context?:JQuery;
     };
+    private manager:SmartStickers;
     private _isStuck:boolean = false;
     private defaultInlineStyles:string;
     private isWrappedWithPlaceholder:boolean = false;
@@ -37,6 +39,10 @@ class Sticker {
         this.startOffset = $.extend({}, this.getOffset(), true);
         $window.on('resize', this.resetPlaceholder.bind(this));
         this.els.$sticker.trigger('register.sticker', {sticker: this});
+    }
+
+    public setScrollRoot(manager:SmartStickers) {
+        this.manager = manager;
     }
 
     private wrapWithPlaceholder() {
@@ -125,12 +131,9 @@ class Sticker {
         return this;
     }
 
-    reposition(scrollTop:number):Sticker {
+    reposition(top:number):Sticker {
         var dims = this.dims;
-        if (this.parent) {
-            scrollTop = this.parent.getOffset().top + this.parent.getOffset().height;
-        }
-        var top = scrollTop - this.els.$placeholder.offset().top;
+        top -= dims.placeholderOffsetTop;
 
         if (top <= dims.minTop) {
             top = dims.minTop;
@@ -145,8 +148,9 @@ class Sticker {
         this.els.$sticker.css({'top': top});
         this.updateDims();
 
+        top = this.getOffset().top + dims.height;
         this.childrens.forEach((sticker) => {
-            sticker.reposition(scrollTop);
+            sticker.reposition(top);
         });
 
         return this;

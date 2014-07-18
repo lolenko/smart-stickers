@@ -52,6 +52,7 @@ class SmartStickers {
 
         if (this.stickers.indexOf(sticker) < 0) {
             this.stickers.push(sticker);
+            sticker.setScrollRoot(this);
         }
 
         // Пересооденить подходящие дочерние стикеру к новому
@@ -68,6 +69,17 @@ class SmartStickers {
         this.rootChildrens.forEach((sticker:Sticker) => {
             sticker.reposition(scrollTop);
         });
+    }
+
+    public getOffset() {
+        if (this.$root[0] === $(window)[0]) {
+            return {
+                top: 0,
+                left: 0
+            };
+        } else {
+            return this.$root.offset();
+        }
     }
 }
 
