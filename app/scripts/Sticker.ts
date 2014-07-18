@@ -86,8 +86,8 @@ class Sticker {
             width: '100%',
             height: '100%',
             boxSizing: 'border-box',
-            margin: placeholderCSS.margin,
-            left: - parseInt(this.els.$placeholder.css('margin-left'), 10)
+            margin: 0,
+            left: 0
         }));
         this.isWrappedWithPlaceholder = true;
         return this;
@@ -117,8 +117,8 @@ class Sticker {
             dims.height = els.$sticker.outerHeight();
             dims.width = els.$sticker.outerWidth();
             dims.placeholderOffsetTop = els.$placeholder.offset().top;
-            dims.minTop = - parseInt(els.$placeholder.css('margin-top'), 10);
-            dims.maxTop = (els.$context.offset().top + els.$context.outerHeight() - parseInt(els.$context.css('padding-bottom'), 10)) - (dims.height + dims.placeholderOffsetTop);
+            dims.minTop = dims.placeholderOffsetTop;
+            dims.maxTop = (els.$context.offset().top + els.$context.outerHeight() - parseInt(els.$context.css('padding-bottom'), 10) - parseInt(els.$context.css('border-bottom'), 10)) - (dims.height);
         }
 
         return this;
@@ -132,8 +132,8 @@ class Sticker {
     }
 
     reposition(top:number):Sticker {
+        this.updateDims(true);
         var dims = this.dims;
-        top -= dims.placeholderOffsetTop;
 
         if (top <= dims.minTop) {
             top = dims.minTop;
@@ -145,10 +145,9 @@ class Sticker {
             this.stick();
         }
 
-        this.els.$sticker.css({'top': top});
-        this.updateDims();
+        this.els.$sticker.css({'top': top - dims.placeholderOffsetTop});
 
-        top = this.getOffset().top + dims.height;
+        top += dims.height;
         this.childrens.forEach((sticker) => {
             sticker.reposition(top);
         });
