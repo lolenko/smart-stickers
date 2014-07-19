@@ -1,15 +1,13 @@
 import jquery = require('vendor/jquery');
-import SmartStickers = require('./SmartStickers');
 if (jquery);
 var $window = $(window);
 
-class Sticker {
+class SimpleSticker {
     private els:{
         $sticker?:JQuery;
         $placeholder?:JQuery;
         $context?:JQuery;
     };
-    private manager:SmartStickers;
     private _isStuck:boolean = false;
     private defaultInlineStyles:string;
     private isWrappedWithPlaceholder:boolean = false;
@@ -25,11 +23,8 @@ class Sticker {
         };
     } = {};
     private startOffset;
-    private parent:Sticker;
-    childrens:Sticker[];
 
     constructor(element, options?) {
-        this.childrens = [];
         this.els = {};
         this.els.$sticker = $(element);
         this.els.$context = this.els.$sticker.parent();
@@ -38,11 +33,6 @@ class Sticker {
         this.updateDims(true);
         this.startOffset = $.extend({}, this.getOffset(), true);
         $window.on('resize', this.resetPlaceholder.bind(this));
-        this.els.$sticker.trigger('register.sticker', {sticker: this});
-    }
-
-    public setScrollRoot(manager:SmartStickers) {
-        this.manager = manager;
     }
 
     private wrapWithPlaceholder() {
@@ -93,7 +83,7 @@ class Sticker {
         return this;
     }
 
-    private unwrapPlaceholder():Sticker {
+    private unwrapPlaceholder():SimpleSticker {
         if (!this.isWrappedWithPlaceholder) {
             return this;
         }
@@ -103,12 +93,12 @@ class Sticker {
         return this;
     }
 
-    private resetInlineStylesToDefault():Sticker {
+    private resetInlineStylesToDefault():SimpleSticker {
         this.els.$sticker.attr('style', this.defaultInlineStyles);
         return this;
     }
 
-    private updateDims(afterResize?:boolean):Sticker {
+    private updateDims(afterResize?:boolean):SimpleSticker {
         var dims = this.dims;
         var els = this.els;
 
@@ -124,14 +114,14 @@ class Sticker {
         return this;
     }
 
-    private resetPlaceholder():Sticker {
+    private resetPlaceholder():SimpleSticker {
         this.unwrapPlaceholder();
         this.wrapWithPlaceholder();
         this.updateDims(true);
         return this;
     }
 
-    public reposition(top:number):Sticker {
+    public reposition(top:number):SimpleSticker {
 //        this.updateDims(true);
         var dims = this.dims;
 
@@ -147,15 +137,10 @@ class Sticker {
 
         this.position(top);
 
-        top += dims.height;
-        this.childrens.forEach((sticker) => {
-            sticker.reposition(top);
-        });
-
         return this;
     }
 
-    private position(top:number):Sticker {
+    private position(top:number):SimpleSticker {
         this.els.$sticker.css({'top': top - this.dims.placeholderOffsetTop});
         return this;
     }
@@ -164,53 +149,18 @@ class Sticker {
         return this._isStuck;
     }
 
-    private stick():Sticker {
+    private stick():SimpleSticker {
         this.els.$sticker.addClass('_is-stuck');
         this._isStuck = true;
         return this;
     }
 
-    private unStick():Sticker {
+    private unStick():SimpleSticker {
         this.els.$sticker.removeClass('_is-stuck');
         this._isStuck = false;
         return this;
     }
 
-    public canStickTo(sticker:Sticker):boolean {
-        return !this.contains(sticker)
-            && this.compareHorizontalTo(sticker) == 0
-            && this.compareVerticalTo(sticker) > 0;
-    }
-
-    public contains(sticker:Sticker):boolean {
-        return $.contains(sticker.getRoot()[0], this.getRoot()[0])
-    }
-
-    public compareHorizontalTo(sticker:Sticker):number {
-        var ownOffset = this.getOffset(),
-            overOffset = sticker.getOffset();
-
-        if (overOffset.left + overOffset.width < ownOffset.left) {
-            return ownOffset.left - (overOffset.left + overOffset.width);
-        } else if (ownOffset.left + ownOffset.width < overOffset.left) {
-            return (ownOffset.left + ownOffset.width) - overOffset.left;
-        } else {
-            return 0
-        }
-    }
-
-    public compareVerticalTo(sticker:Sticker):number {
-        var ownOffset = this.getStartOffset(),
-            overOffset = sticker.getStartOffset();
-
-        if (overOffset.top + overOffset.height < ownOffset.top) {
-            return ownOffset.top - (overOffset.top + overOffset.height);
-        } else if (ownOffset.top + ownOffset.height < overOffset.top) {
-            return (ownOffset.top + ownOffset.height) - overOffset.top;
-        } else {
-            return 0
-        }
-    }
 
     public getOffset() {
         return {
@@ -228,45 +178,7 @@ class Sticker {
     public getRoot():JQuery {
         return this.els.$sticker;
     }
-
-    public getStackHeight() {
-        return this.getOffset().height + (this.parent ? this.parent.getStackHeight() : 0);
-    }
-
-    public addChild(sticker:Sticker) {
-        this.childrens.push(sticker);
-    }
-
-    public getChildrens() {
-        return this.childrens;
-    }
-
-    public emptyChildrens() {
-        this.childrens = [];
-        return this;
-    }
-
-    public setParent(sticker:Sticker) {
-        this.parent = sticker;
-    }
-
-    public getParent():Sticker {
-        return this.parent;
-    }
-
-    public deattach() {
-        if (this.parent) {
-            var parentChildrens = this.parent.getChildrens();
-            parentChildrens.splice(parentChildrens.indexOf(this), 1);
-            this.setParent(null);
-        }
-    }
-
-    public attach(sticker:Sticker) {
-        sticker.deattach();
-        this.addChild(sticker);
-        sticker.setParent(this);
-    }
 }
-export = Sticker;
+
+export = SimpleSticker;
 

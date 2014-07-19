@@ -67,7 +67,7 @@ class SmartStickers {
 
     private reposition(scrollTop:number) {
         this.rootChildrens.forEach((sticker:Sticker) => {
-            sticker.reposition(scrollTop);
+            sticker.reposition(scrollTop + this.getOffset().top);
         });
     }
 
