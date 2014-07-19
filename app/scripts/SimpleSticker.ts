@@ -11,7 +11,7 @@ class SimpleSticker {
     private _isStuck:boolean = false;
     private defaultInlineStyles:string;
     private isWrappedWithPlaceholder:boolean = false;
-    private dims:{
+    dims:{
         maxTop?:number;
         minTop?:number;
         height?:number;
@@ -22,7 +22,7 @@ class SimpleSticker {
             top:number;
         };
     } = {};
-    private top:number;
+    top:number;
 
     constructor(element, options?) {
         this.els = {};
@@ -31,6 +31,7 @@ class SimpleSticker {
         this.defaultInlineStyles = this.els.$sticker.attr('style') || '';
         this.wrapWithPlaceholder();
         this.updateDims(true);
+        this.top = 0;
         $window.on('resize', this.resetPlaceholder.bind(this));
     }
 
@@ -123,7 +124,7 @@ class SimpleSticker {
     public reposition(top:number):SimpleSticker {
 //        this.updateDims(true);
         // если хранить значение топ, его не надо пересчитывать.. но тогда видимо будут трудности при стикерах которые могут прятоться
-//        top += this.top;
+        top += this.top;
         var dims = this.dims;
 
         if (top <= dims.minTop) {
@@ -141,7 +142,7 @@ class SimpleSticker {
         return this;
     }
 
-    private position(top:number):SimpleSticker {
+    position(top:number):SimpleSticker {
         this.els.$sticker.css({'top': top - this.dims.placeholderOffsetTop});
         return this;
     }
@@ -150,13 +151,13 @@ class SimpleSticker {
         return this._isStuck;
     }
 
-    private stick():SimpleSticker {
+    stick():SimpleSticker {
         this.els.$sticker.addClass('_is-stuck');
         this._isStuck = true;
         return this;
     }
 
-    private unStick():SimpleSticker {
+    unStick():SimpleSticker {
         this.els.$sticker.removeClass('_is-stuck');
         this._isStuck = false;
         return this;

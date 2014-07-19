@@ -1,6 +1,7 @@
 import jquery = require('vendor/jquery');
 import SmartStickers = require('./SmartStickers');
 import SimpleSticker = require('./SimpleSticker');
+import HiderSticker = require('./HiderSticker');
 if (jquery);
 
 class StackSticker {
@@ -10,6 +11,7 @@ class StackSticker {
     private childrens:StackSticker[];
 
     constructor(element, options?) {
+//        this.sticker = new HiderSticker(element);
         this.sticker = new SimpleSticker(element);
         this.childrens = [];
         this.startOffset = $.extend({}, this.sticker.getOffset(), true);
@@ -18,8 +20,9 @@ class StackSticker {
 
     public reposition(top:number):StackSticker {
         this.sticker.reposition(top);
-        top += this.getOffset().height;
+//        top = this.getStackHeight();
         this.childrens.forEach((sticker) => {
+            sticker.setTop(this.getStackHeight());
             sticker.reposition(top);
         });
         return this;

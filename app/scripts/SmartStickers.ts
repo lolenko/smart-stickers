@@ -11,6 +11,7 @@ class SmartStickers {
 
     constructor(rootEl) {
         this.$root = $(rootEl);
+        this.scrollTop = this.$root.scrollTop();
         this.$root.on('register.stacksticker', (ev, data) => {
             ev.stopPropagation();
             this.add(data.sticker);

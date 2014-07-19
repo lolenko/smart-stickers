@@ -29,6 +29,7 @@ var ss = new SmartStickers(window);
 $('.sticker').each(function(i, el) {
     new StackSticker(el);
 });
+
 //
 //$('.sticker').each(function(i, el) {
 //    new SimpleSticker(el);
