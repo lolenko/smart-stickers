@@ -22,7 +22,6 @@ class SimpleSticker {
             top:number;
         };
     } = {};
-    private startOffset;
 
     constructor(element, options?) {
         this.els = {};
@@ -31,7 +30,6 @@ class SimpleSticker {
         this.defaultInlineStyles = this.els.$sticker.attr('style') || '';
         this.wrapWithPlaceholder();
         this.updateDims(true);
-        this.startOffset = $.extend({}, this.getOffset(), true);
         $window.on('resize', this.resetPlaceholder.bind(this));
     }
 
@@ -169,10 +167,6 @@ class SimpleSticker {
             width: this.dims.width,
             height: this.dims.height
         }
-    }
-
-    public getStartOffset() {
-        return this.startOffset;
     }
 
     public getRoot():JQuery {

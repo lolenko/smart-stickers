@@ -1,5 +1,5 @@
 import jquery = require('vendor/jquery');
-import Sticker = require('./Sticker');
+import Sticker = require('./StackSticker');
 
 if (jquery);
 
@@ -11,7 +11,7 @@ class SmartStickers {
 
     constructor(rootEl) {
         this.$root = $(rootEl);
-        this.$root.on('register.sticker', (ev, data) => {
+        this.$root.on('register.stacksticker', (ev, data) => {
             ev.stopPropagation();
             this.add(data.sticker);
         });
@@ -52,7 +52,6 @@ class SmartStickers {
 
         if (this.stickers.indexOf(sticker) < 0) {
             this.stickers.push(sticker);
-            sticker.setScrollRoot(this);
         }
 
         // Пересооденить подходящие дочерние стикеру к новому

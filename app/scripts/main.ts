@@ -2,7 +2,7 @@
 
 import jquery = require('vendor/jquery');
 import SmartStickers = require('SmartStickers');
-import Sticker = require('Sticker');
+import StackSticker = require('StackSticker');
 
 if (jquery) $.noop();
 
@@ -26,5 +26,5 @@ if (jquery) $.noop();
 
 var ss = new SmartStickers(window);
 $('.sticker').each(function(i, el) {
-    new Sticker(el);
+    new StackSticker(el);
 });
