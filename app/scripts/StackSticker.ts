@@ -110,6 +110,11 @@ class StackSticker {
         sticker.deattach();
         this.addChild(sticker);
         sticker.setParent(this);
+        sticker.setTop(this.getStackHeight())
+    }
+
+    public setTop(top:number) {
+        this.sticker.setTop(top);
     }
 }
 

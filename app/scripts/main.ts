@@ -3,6 +3,7 @@
 import jquery = require('vendor/jquery');
 import SmartStickers = require('SmartStickers');
 import StackSticker = require('StackSticker');
+import SimpleSticker = require('SimpleSticker');
 
 if (jquery) $.noop();
 
@@ -28,3 +29,7 @@ var ss = new SmartStickers(window);
 $('.sticker').each(function(i, el) {
     new StackSticker(el);
 });
+//
+//$('.sticker').each(function(i, el) {
+//    new SimpleSticker(el);
+//});

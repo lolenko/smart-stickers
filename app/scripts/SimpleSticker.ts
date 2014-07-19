@@ -22,6 +22,7 @@ class SimpleSticker {
             top:number;
         };
     } = {};
+    private top:number;
 
     constructor(element, options?) {
         this.els = {};
@@ -121,6 +122,8 @@ class SimpleSticker {
 
     public reposition(top:number):SimpleSticker {
 //        this.updateDims(true);
+        // если хранить значение топ, его не надо пересчитывать.. но тогда видимо будут трудности при стикерах которые могут прятоться
+//        top += this.top;
         var dims = this.dims;
 
         if (top <= dims.minTop) {
@@ -171,6 +174,10 @@ class SimpleSticker {
 
     public getRoot():JQuery {
         return this.els.$sticker;
+    }
+
+    public setTop(top:number) {
+        this.top = top;
     }
 }
 

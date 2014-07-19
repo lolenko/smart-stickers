@@ -48,6 +48,7 @@ class SmartStickers {
             if (this.rootChildrens.indexOf(sticker) < 0) {
                 this.rootChildrens.push(sticker);
             }
+            sticker.setTop(0);
         }
 
         if (this.stickers.indexOf(sticker) < 0) {
