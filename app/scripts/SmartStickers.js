@@ -1,33 +1,32 @@
-import jquery = require('vendor/jquery');
-import Sticker = require('./StackSticker');
+define(['StackSticker', 'jquery'], function(StackSticker, $) {
 
-if (jquery);
+    'use strict';
 
-class SmartStickers {
-    private stickers:Sticker[] = [];
-    private rootChildrens:Sticker[] = [];
-    private scrollTop:number;
-    private $root:JQuery;
-
-    constructor(rootEl) {
+    function SmartStickers(rootEl) {
+        var _this = this;
+        this.stickers = [];
+        this.rootChildrens = [];
         this.$root = $(rootEl);
         this.scrollTop = this.$root.scrollTop();
-        this.$root.on('register.stacksticker', (ev, data) => {
+        this.$root.on('register.stacksticker', function (ev, data) {
             ev.stopPropagation();
-            this.add(data.sticker);
+            _this.add(data.sticker);
         });
-        this.$root.on('scroll', this.onScroll.bind(this));
-        setTimeout(() => {
-            console.log(this.rootChildrens);
-        },5000);
+
+        //this.$root.on('scroll', this.onScroll.bind(this));
+        this.onScroll();
+        setTimeout(function () {
+            console.log(_this.rootChildrens);
+        }, 5000);
     }
 
-    private onScroll() {
+    SmartStickers.prototype.onScroll = function () {
         this.scrollTop = this.$root.scrollTop();
         this.reposition(this.scrollTop);
-    }
+        requestAnimationFrame(this.onScroll.bind(this));
+    };
 
-    public add(sticker:Sticker) {
+    SmartStickers.prototype.add = function (sticker) {
         var candidatesToStick = this.stickers.filter(sticker.canStickTo.bind(sticker));
         if (candidatesToStick.length > 0) {
             var mainCandidate = candidatesToStick[0];
@@ -57,22 +56,22 @@ class SmartStickers {
         }
 
         // Пересооденить подходящие дочерние стикеру к новому
-        var candidateToBeChildrens = this.stickers.filter((candidate) => {
+        var candidateToBeChildrens = this.stickers.filter(function (candidate) {
             return candidate.canStickTo(sticker);
         });
         candidateToBeChildrens.forEach(this.add.bind(this));
 
         this.reposition(this.scrollTop);
-    }
+    };
 
-
-    private reposition(scrollTop:number) {
-        this.rootChildrens.forEach((sticker:Sticker) => {
-            sticker.reposition(scrollTop + this.getOffset().top);
+    SmartStickers.prototype.reposition = function (scrollTop) {
+        var _this = this;
+        this.rootChildrens.forEach(function (sticker) {
+            sticker.reposition(scrollTop + _this.getOffset().top);
         });
-    }
+    };
 
-    public getOffset() {
+    SmartStickers.prototype.getOffset = function () {
         if (this.$root[0] === $(window)[0]) {
             return {
                 top: 0,
@@ -81,7 +80,8 @@ class SmartStickers {
         } else {
             return this.$root.offset();
         }
-    }
-}
+    };
 
-export = SmartStickers;
+    return SmartStickers;
+
+});

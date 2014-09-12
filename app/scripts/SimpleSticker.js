@@ -1,30 +1,13 @@
-import jquery = require('vendor/jquery');
-if (jquery);
-var $window = $(window);
+define(['jquery'], function($) {
 
-class SimpleSticker {
-    private els:{
-        $sticker?:JQuery;
-        $placeholder?:JQuery;
-        $context?:JQuery;
-    };
-    private _isStuck:boolean = false;
-    private defaultInlineStyles:string;
-    private isWrappedWithPlaceholder:boolean = false;
-    dims:{
-        maxTop?:number;
-        minTop?:number;
-        height?:number;
-        width?:number;
-        placeholderOffsetTop?:number;
-        offset?:{
-            left:number;
-            top:number;
-        };
-    } = {};
-    top:number;
+    'use strict';
 
-    constructor(element, options?) {
+    var $window = $(window);
+
+    function SimpleSticker(element, options) {
+        this._isStuck = false;
+        this.isWrappedWithPlaceholder = false;
+        this.dims = {};
         this.els = {};
         this.els.$sticker = $(element);
         this.els.$context = this.els.$sticker.parent();
@@ -35,7 +18,7 @@ class SimpleSticker {
         $window.on('resize', this.resetPlaceholder.bind(this));
     }
 
-    private wrapWithPlaceholder() {
+    SimpleSticker.prototype.wrapWithPlaceholder = function () {
         if (this.isWrappedWithPlaceholder) {
             return this;
         }
@@ -54,7 +37,7 @@ class SimpleSticker {
             left: 0
         };
 
-        var placeholderCSS:any = {};
+        var placeholderCSS = {};
         for (var CSSprop in boxCSS) {
             placeholderCSS[CSSprop] = this.els.$sticker.css(CSSprop);
         }
@@ -65,7 +48,7 @@ class SimpleSticker {
         for (var CSSprop in placeholderPositionCSS) {
             placeholderPositionCSS[CSSprop] = this.els.$sticker.css(CSSprop);
         }
-        placeholderPositionCSS['position'] = (placeholderPositionCSS['position'] == 'relative' || placeholderPositionCSS['position'] == 'static') ? 'relative' : placeholderPositionCSS['position']
+        placeholderPositionCSS['position'] = (placeholderPositionCSS['position'] == 'relative' || placeholderPositionCSS['position'] == 'static') ? 'relative' : placeholderPositionCSS['position'];
         $.extend(placeholderCSS, placeholderPositionCSS);
 
         this.els.$placeholder = $('<div></div>');
@@ -81,9 +64,9 @@ class SimpleSticker {
         }));
         this.isWrappedWithPlaceholder = true;
         return this;
-    }
+    };
 
-    private unwrapPlaceholder():SimpleSticker {
+    SimpleSticker.prototype.unwrapPlaceholder = function () {
         if (!this.isWrappedWithPlaceholder) {
             return this;
         }
@@ -91,14 +74,14 @@ class SimpleSticker {
         this.resetInlineStylesToDefault();
         this.isWrappedWithPlaceholder = false;
         return this;
-    }
+    };
 
-    private resetInlineStylesToDefault():SimpleSticker {
+    SimpleSticker.prototype.resetInlineStylesToDefault = function () {
         this.els.$sticker.attr('style', this.defaultInlineStyles);
         return this;
-    }
+    };
 
-    private updateDims(afterResize?:boolean):SimpleSticker {
+    SimpleSticker.prototype.updateDims = function (afterResize) {
         var dims = this.dims;
         var els = this.els;
 
@@ -112,17 +95,17 @@ class SimpleSticker {
         }
 
         return this;
-    }
+    };
 
-    private resetPlaceholder():SimpleSticker {
+    SimpleSticker.prototype.resetPlaceholder = function () {
         this.unwrapPlaceholder();
         this.wrapWithPlaceholder();
         this.updateDims(true);
         return this;
-    }
+    };
 
-    public reposition(top:number):SimpleSticker {
-//        this.updateDims(true);
+    SimpleSticker.prototype.reposition = function (top) {
+        //        this.updateDims(true);
         // если хранить значение топ, его не надо пересчитывать.. но тогда видимо будут трудности при стикерах которые могут прятоться
         top += this.top;
         var dims = this.dims;
@@ -140,47 +123,46 @@ class SimpleSticker {
         this.position(top);
 
         return this;
-    }
+    };
 
-    position(top:number):SimpleSticker {
-        this.els.$sticker.css({'top': top - this.dims.placeholderOffsetTop});
+    SimpleSticker.prototype.position = function (top) {
+        this.els.$sticker.css({ 'top': top - this.dims.placeholderOffsetTop });
         return this;
-    }
+    };
 
-    public isStuck():boolean {
+    SimpleSticker.prototype.isStuck = function () {
         return this._isStuck;
-    }
+    };
 
-    stick():SimpleSticker {
+    SimpleSticker.prototype.stick = function () {
         this.els.$sticker.addClass('_is-stuck');
         this._isStuck = true;
         return this;
-    }
+    };
 
-    unStick():SimpleSticker {
+    SimpleSticker.prototype.unStick = function () {
         this.els.$sticker.removeClass('_is-stuck');
         this._isStuck = false;
         return this;
-    }
+    };
 
-
-    public getOffset() {
+    SimpleSticker.prototype.getOffset = function () {
         return {
             left: this.dims.offset.left,
             top: this.dims.offset.top,
             width: this.dims.width,
             height: this.dims.height
-        }
-    }
+        };
+    };
 
-    public getRoot():JQuery {
+    SimpleSticker.prototype.getRoot = function () {
         return this.els.$sticker;
-    }
+    };
 
-    public setTop(top:number) {
+    SimpleSticker.prototype.setTop = function (top) {
         this.top = top;
-    }
-}
+    };
 
-export = SimpleSticker;
+    return SimpleSticker;
 
+});

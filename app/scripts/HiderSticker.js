@@ -1,29 +1,27 @@
-import SimpleSticker = require('SimpleSticker');
+define(['SimpleSticker', 'utils'], function(SimpleSticker, utils) {
 
-enum ScrollDirection {
-    UP,
-    DOWN
-}
+    'use strict';
 
-class HiderSticker extends SimpleSticker {
-    private scrollDir:ScrollDirection;
-    private oldScrollTop:number;
-    private hiderDelta:number;
+    var ScrollDirection = {
+        UP: 0,
+        DOWN: 1
+    };
 
-    constructor(element, options?) {
-        super(element, options);
+    function HiderSticker(element, options) {
+        SimpleSticker.call(this, element, options);
         this.oldScrollTop = 0;
         this.hiderDelta = 0;
         this.scrollDir = ScrollDirection.DOWN;
     }
 
-    public reposition(top:number):SimpleSticker {
+    utils.inherit(HiderSticker, SimpleSticker)
+
+    HiderSticker.prototype.reposition = function (top) {
         var scrollDelta = top - this.oldScrollTop;
         var scrollDir = this.updateScrollDir(top);
 
         top += this.top;
         var dims = this.dims;
-
 
         if (top <= dims.minTop) {
             top = dims.minTop;
@@ -44,9 +42,9 @@ class HiderSticker extends SimpleSticker {
         this.position(top);
 
         return this;
-    }
+    };
 
-    private updateScrollDir(scrollTop:number) {
+    HiderSticker.prototype.updateScrollDir = function (scrollTop) {
         if (scrollTop > this.oldScrollTop) {
             this.scrollDir = ScrollDirection.DOWN;
         } else {
@@ -54,14 +52,14 @@ class HiderSticker extends SimpleSticker {
         }
         this.oldScrollTop = scrollTop;
         return this.scrollDir;
-    }
+    };
 
-    public getOffset() {
-        var offset = super.getOffset();
+    HiderSticker.prototype.getOffset = function () {
+        var offset = SimpleSticker.super_.prototype.getOffset.call(this);
         offset.height -= this.hiderDelta;
         return offset;
-    }
-}
+    };
 
-export = HiderSticker;
+    return HiderSticker;
 
+});
