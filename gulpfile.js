@@ -22,79 +22,66 @@
 // Include Gulp & Tools We'll Use
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
-var del = require('del');
-var runSequence = require('run-sequence');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 
-// Optimize Images
-gulp.task('images', function () {
-    return gulp.src('app/images/**/*')
-        .pipe($.cache($.imagemin({
-            progressive: true,
-            interlaced: true
-        })))
-        .pipe(gulp.dest('dist/images'))
+var AUTOPREFIXER_BROWSERS = [
+    'ie >= 8',
+    'ie_mob >= 10',
+    'ff >= 25',
+    'chrome >= 30',
+    'safari >= 6',
+    'opera >= 12',
+    'ios >= 6',
+    'android >= 2.3',
+    'bb >= 10'
+];
+
+// Lint JavaScript
+gulp.task('jshint', function () {
+    return gulp.src('scripts/*.js')
         .pipe(reload({stream: true, once: true}))
-        .pipe($.size({title: 'images'}));
+        .pipe($.jshint())
+        .pipe($.jshint.reporter('jshint-stylish'))
+        .pipe($.if(!browserSync.active, $.jshint.reporter('fail')));
 });
 
-
-// Compile Less Files You Added (app/styles)
+// Compile and Automatically Prefix Stylesheets
 gulp.task('styles', function () {
-    return gulp.src(['app/styles/**/*.less'])
-        .pipe($.less())
-        .pipe($.autoprefixer('last 1 version'))
-        .pipe(gulp.dest('dist/styles'))
-        .pipe(reload({stream: true, once: true}))
+    // For best performance, don't add Sass partials to `gulp.src`
+    return gulp.src([
+        'styles/*.less',
+        'styles/*.css'
+    ])
+        .pipe($.changed('styles/dest', {extension: '.css'}))
+        .pipe($.if('*.less', $.less()
+                .on('error', console.error.bind(console))
+        ))
+        .pipe($.autoprefixer(AUTOPREFIXER_BROWSERS))
+        .pipe(gulp.dest('styles/dest'))
         .pipe($.size({title: 'styles'}));
 });
 
 
-gulp.task('copy:html', function () {
-    return gulp.src('app/**/*.html')
-        .pipe(gulp.dest('dist'))
-        .pipe(reload({stream: true, once: true}))
-        .pipe($.size({title: 'html'}));
-});
-
-gulp.task('typescript', function () {
-    return gulp.src('app/scripts/**/*.ts')
-        .pipe($.tsc({module: 'amd'}))
-        .pipe(gulp.dest('dist/scripts'))
-        .pipe(reload({stream: true, once: true}))
-        .pipe($.size({title: 'typescript'}));
-});
-
-gulp.task('copy:js', function () {
-    return gulp.src('app/scripts/**/*.js')
-        .pipe(gulp.dest('dist/scripts'))
-        .pipe(reload({stream: true, once: true}))
-        .pipe($.size({title: 'copy:js'}));
-});
-
-gulp.task('copy', ['copy:js', 'copy:html']);
-
-// Clean Output Directory
-gulp.task('clean', del.bind(null, ['dist']));
 
 // Watch Files For Changes & Reload
-gulp.task('serve', function () {
-    browserSync.init({
+gulp.task('default', ['styles'], function () {
+    browserSync({
+        notify: false,
+        // Run as an https by uncommenting 'https: true'
+        // Note: this uses an unsigned certificate which on first access
+        //       will present a certificate warning in the browser.
+        // https: true,
         server: {
-            baseDir: ['dist']
-        },
-        notify: false
+            baseDir: ['.']
+        }
     });
 
-    gulp.watch(['app/**/*.html'], ['copy:html']);
-    gulp.watch(['app/styles/**/*.{css,less}'], ['styles']);
-    gulp.watch(['app/scripts/**/*.ts'], ['typescript']);
-    gulp.watch(['app/scripts/**/*.js'], ['copy:js']);
-    gulp.watch(['app/images/**/*'], ['images']);
+    gulp.watch(['**/*.html'], reload);
+    gulp.watch(['styles/**/*.{less,css}'], ['styles', reload]);
+    gulp.watch(['scripts/**/*.js'], ['jshint']);
 });
 
-// Build Production Files, the Default Task
-gulp.task('default', ['clean'], function (cb) {
-    runSequence(['styles', 'typescript', 'copy', 'images'], cb);
-});
+
+// Load custom tasks from the `tasks` directory
+try { require('require-dir')('tasks'); } catch (err) {}

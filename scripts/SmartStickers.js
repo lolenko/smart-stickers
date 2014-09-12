@@ -8,16 +8,7 @@ define(['StackSticker', 'jquery'], function(StackSticker, $) {
         this.rootChildrens = [];
         this.$root = $(rootEl);
         this.scrollTop = this.$root.scrollTop();
-        this.$root.on('register.stacksticker', function (ev, data) {
-            ev.stopPropagation();
-            _this.add(data.sticker);
-        });
-
-        //this.$root.on('scroll', this.onScroll.bind(this));
         this.onScroll();
-        setTimeout(function () {
-            console.log(_this.rootChildrens);
-        }, 5000);
     }
 
     SmartStickers.prototype.onScroll = function () {

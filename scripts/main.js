@@ -27,6 +27,6 @@ require(['jquery', 'SmartStickers', 'StackSticker'], function($, SmartStickers, 
 
     var ss = new SmartStickers(window);
     $('.sticker').each(function (i, el) {
-        new StackSticker(el);
+        ss.add(new StackSticker(el));
     });
 });
