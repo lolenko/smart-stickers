@@ -1,0 +1,58 @@
+header {
+  border: 1px solid blue;
+  padding: 20px;
+  background: aqua;
+}
+.content {
+  overflow: hidden;
+  max-width: 900px;
+  border: 1px solid blue;
+  margin: 20px auto;
+}
+aside {
+  float: left;
+  width: 26%;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  margin: 2%;
+}
+main {
+  display: block;
+  width: 70%;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  margin: 0 0 0 30%;
+  font-size: 40px;
+}
+.sticker {
+  padding: 20px;
+  border: 1px solid #ff0000;
+}
+.sticker._is-stuck {
+  -webkit-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+          box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+.test-block {
+  width: 50%;
+  height: 200px;
+  background: rgba(0, 0, 255, 0.7);
+  margin: 10px;
+  position: relative;
+  left: -15%;
+  top: 550px;
+}
+.test-block-2 {
+  width: 50%;
+  height: 200px;
+  background: rgba(0, 0, 255, 0.7);
+  margin: 10px;
+  position: relative;
+  left: 25%;
+  top: -700px;
+}
+footer {
+  padding: 300px 20px;
+  border: 1px solid blue;
+}
