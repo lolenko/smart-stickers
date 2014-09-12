@@ -1,9 +1,10 @@
-define(['jquery', 'SimpleSticker'], function($, SimpleSticker) {
+define(['jquery', 'SimpleSticker', 'HiderSticker'], function($, SimpleSticker, HiderSticker) {
 
     'use strict';
 
     function StackSticker(element, options) {
         //this.sticker = new HiderSticker(element);
+        //this.sticker = Math.random() > 0.5 ? new SimpleSticker(element) : new HiderSticker(element);
         this.sticker = new SimpleSticker(element);
         this.childrens = [];
         this.startOffset = $.extend({}, this.sticker.getOffset(), true);

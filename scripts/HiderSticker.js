@@ -14,7 +14,7 @@ define(['SimpleSticker', 'utils'], function(SimpleSticker, utils) {
         this.scrollDir = ScrollDirection.DOWN;
     }
 
-    utils.inherit(HiderSticker, SimpleSticker)
+    utils.inherits(HiderSticker, SimpleSticker)
 
     HiderSticker.prototype.reposition = function (top) {
         var scrollDelta = top - this.oldScrollTop;
@@ -55,7 +55,7 @@ define(['SimpleSticker', 'utils'], function(SimpleSticker, utils) {
     };
 
     HiderSticker.prototype.getOffset = function () {
-        var offset = SimpleSticker.super_.prototype.getOffset.call(this);
+        var offset = HiderSticker.super_.prototype.getOffset.call(this);
         offset.height -= this.hiderDelta;
         return offset;
     };

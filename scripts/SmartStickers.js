@@ -8,13 +8,14 @@ define(['StackSticker', 'jquery'], function(StackSticker, $) {
         this.rootChildrens = [];
         this.$root = $(rootEl);
         this.scrollTop = this.$root.scrollTop();
+        this.$root.on('scroll', this.onScroll.bind(this));
         this.onScroll();
     }
 
     SmartStickers.prototype.onScroll = function () {
         this.scrollTop = this.$root.scrollTop();
         this.reposition(this.scrollTop);
-        requestAnimationFrame(this.onScroll.bind(this));
+        //requestAnimationFrame(this.onScroll.bind(this));
     };
 
     SmartStickers.prototype.add = function (sticker) {
